@@ -1,4 +1,4 @@
-import { JobOfferProviderEnum } from 'src/enums/job-offer.entity.enum';
+import { JobOfferProviderEnum } from '../enums/job-offer.entity.enum';
 import { Entity, Column, PrimaryGeneratedColumn, Unique } from 'typeorm';
 import {
     IsInt,

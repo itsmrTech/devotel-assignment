@@ -5,6 +5,8 @@ import { JobOffer } from '../../../entities/job-offer.entity';
 import { ConfigService } from '@nestjs/config';
 import axios from 'axios';
 import {
+    IExcludeExistingJobOffersServiceInput,
+    IExcludeExistingJobOffersServiceOutput,
     IFetchJobOffersAPIsServiceOutput,
     ISaveJobOffersServiceInput,
     ISaveJobOffersServiceOutput,
@@ -128,12 +130,14 @@ export class JobOfferInternalService {
     private async transformAPI2ResponseProvider2(
         input: ITransformAPI2ResponseServiceInput
     ): Promise<ITransformAPI2ResponseServiceOutput> {
-        const jobOffers = Object.values(input.response.data.jobsList).map(
-            (job) => {
+        const jobOffers = Object.keys(input.response.data.jobsList).map(
+            (jobId) => {
+                const job = input.response.data.jobsList[jobId];
                 const jobOffer = new JobOffer();
-                jobOffer.externalId = job.position;
+                jobOffer.externalId = jobId;
                 jobOffer.title = job.position;
                 jobOffer.company = job.employer?.companyName;
+                jobOffer.companyWebsite = job.employer?.website;
                 jobOffer.location = [job.location?.city, job.location?.state]
                     .filter((str) => !!str)
                     .join(', ');
@@ -157,11 +161,48 @@ export class JobOfferInternalService {
         return { jobOffers };
     }
 
+    async excludeExistingJobOffers(
+        input: IExcludeExistingJobOffersServiceInput
+    ): Promise<IExcludeExistingJobOffersServiceOutput> {
+        this.logger.log('Excluding existing job offers...');
+        const existingJobOffers = await this.jobRepository.find({
+            where: input.jobOffers.map((jobOffer) => ({
+                externalId: jobOffer.externalId,
+                provider: jobOffer.provider,
+            })),
+        });
+        const newJobOffers = input.jobOffers.filter(
+            (jobOffer) =>
+                !existingJobOffers.some(
+                    (existingJobOffer) =>
+                        existingJobOffer.externalId === jobOffer.externalId &&
+                        existingJobOffer.provider === jobOffer.provider
+                )
+        );
+        return { newJobOffers, existingJobOffers };
+    }
+
     async saveJobOffers(
         input: ISaveJobOffersServiceInput
     ): Promise<ISaveJobOffersServiceOutput> {
         this.logger.log('Saving job offers...');
-        const jobOffers = await this.jobRepository.save(input.jobOffers);
+        const jobOffers = await this.jobRepository.save(input.newJobOffers);
+        for (const jobOffer of input.updateExistingJobOffers) {
+            await this.jobRepository.update(
+                {
+                    externalId: jobOffer.externalId,
+                    provider: jobOffer.provider,
+                },
+                jobOffer
+            );
+            const updatedJobOffer = await this.jobRepository.findOne({
+                where: {
+                    externalId: jobOffer.externalId,
+                    provider: jobOffer.provider,
+                },
+            });
+            jobOffers.push(updatedJobOffer);
+        }
         return { jobOffers };
     }
 }

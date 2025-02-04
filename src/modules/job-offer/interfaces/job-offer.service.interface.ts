@@ -81,7 +81,8 @@ export interface ITransformAPI2ResponseServiceOutput {
 }
 
 export interface ISaveJobOffersServiceInput {
-    jobOffers: JobOffer[];
+    newJobOffers: JobOffer[];
+    updateExistingJobOffers: JobOffer[];
 }
 export interface ISaveJobOffersServiceOutput {
     jobOffers: JobOffer[];
@@ -89,4 +90,12 @@ export interface ISaveJobOffersServiceOutput {
 
 export interface ISyncJobOffersCronServiceOutput {
     jobOffers: JobOffer[];
+}
+
+export interface IExcludeExistingJobOffersServiceInput {
+    jobOffers: JobOffer[];
+}
+export interface IExcludeExistingJobOffersServiceOutput {
+    newJobOffers: JobOffer[];
+    existingJobOffers: JobOffer[];
 }

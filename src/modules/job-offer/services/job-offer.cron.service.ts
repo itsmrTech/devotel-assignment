@@ -36,9 +36,14 @@ export class JobOfferCronService {
                     });
                 jobOfferObjs.push(...jobOffers);
             }
+            const seperatedJobOffers =
+                await this.jobOfferInternalService.excludeExistingJobOffers({
+                    jobOffers: jobOfferObjs,
+                });
             const saveResult = await this.jobOfferInternalService.saveJobOffers(
                 {
-                    jobOffers: jobOfferObjs,
+                    newJobOffers: seperatedJobOffers.newJobOffers,
+                    updateExistingJobOffers: seperatedJobOffers.existingJobOffers,
                 }
             );
             return { jobOffers: saveResult.jobOffers };

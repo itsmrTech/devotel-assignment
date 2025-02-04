@@ -99,3 +99,33 @@ export interface IExcludeExistingJobOffersServiceOutput {
     newJobOffers: JobOffer[];
     existingJobOffers: JobOffer[];
 }
+
+export interface IGetJobOffersListServiceInput {
+    pagination: {
+        page: number;
+        pageSize: number;
+    };
+    search: {
+        title: string;
+        location: string;
+    };
+    filters:{
+        salaryRange: [number, number];
+        salaryCurrency: string;
+        type: string;
+        skills: string[];
+    };
+    sort: {
+        sortBy: string;
+        order: 'ASC' | 'DESC';
+    };
+}
+export interface IGetJobOffersListServiceOutput {
+    jobOffers: JobOffer[];
+    meta: {
+        total: number;
+        pagesCount: number;
+        page: number;
+        pageSize: number;
+    };
+}

@@ -39,36 +39,54 @@ export class JobOfferInternalService {
         ];
     }
 
-    async fetchJobOffersFromAPIs(): Promise<IFetchJobOffersAPIsServiceOutput> {
+    async fetchJobOffersFromAPIs(
+ 
+    ): Promise<IFetchJobOffersAPIsServiceOutput> {
         this.logger.log('Fetching job offers from APIs...');
         const providers = [
             JobOfferProviderEnum.API1,
             JobOfferProviderEnum.API2,
         ];
         const responses: IFetchJobOffersAPIsServiceOutput['jobOffers'] = (
-            await Promise.all(
-                this.apis.map(async (api, index) => {
-                    this.logger.log(`Fetching job offers from ${api}...`);
-                    try {
-                        // Handle the response
-                        const response = await axios.get(api);
-                        // Process the response if needed
-                        return {
-                            provider:
-                                providers[index] ?? JobOfferProviderEnum.OTHER,
-                            url: api,
-                            data: response.data,
-                        };
-                    } catch (e) {
-                        this.logger.error(
-                            `Error fetching job offers from ${api}: ${e.message}`
-                        );
-                        return null;
-                    }
-                })
-            )
+            await Promise.all(this.apis.map(async (api, index) => {
+                return this.fetchAPI(api, providers[index], 0);
+            }))
         ).filter((response) => response !== null);
         return { jobOffers: responses };
+    }
+
+    private async fetchAPI(
+        api: string,
+        provider: JobOfferProviderEnum,
+        retry?: number
+    ): Promise<{
+        provider: JobOfferProviderEnum;
+        url: string;
+        data: object;
+    }> {
+        this.logger.log(`Fetching job offers from ${api}...`);
+        try {
+            // Handle the response
+            const response = await axios.get(api);
+            // Process the response if needed
+            return {
+                provider: provider ?? JobOfferProviderEnum.OTHER,
+                url: api,
+                data: response.data,
+            };
+        } catch (e) {
+            this.logger.error(
+                `Error fetching job offers from ${api}: ${e.message}`
+            );
+            if (
+                retry &&
+                retry < this.configService.get<number>('API_REQUEST_RETRIES')
+            ) {
+                return this.fetchAPI(api,provider,retry ?? 0 + 1);
+            }
+
+            return null;
+        }
     }
 
     async transformAPIResponse(

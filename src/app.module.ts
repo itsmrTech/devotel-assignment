@@ -15,6 +15,7 @@ import { JobOfferModule } from './modules/job-offer/job-offer.module';
                 EXTERNAL_API_URL_1: Joi.string().uri().required(),
                 EXTERNAL_API_URL_2: Joi.string().uri().required(),
                 CRON_JOB_OFFER_SCHEDULE: Joi.string().required(),
+                API_REQUEST_RETRIES: Joi.number().required(),
             }),
         }),
         TypeOrmModule.forRoot({

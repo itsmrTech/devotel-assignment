@@ -42,9 +42,10 @@ export class JobOffer {
     @IsString()
     location: string;
 
-    @Column({ type: 'boolean' })
+    @Column({ type: 'boolean', nullable: true })
     @IsBoolean()
-    isRemote: boolean;
+    @IsOptional()
+    isRemote?: boolean;
 
     @Column({ type: 'int', nullable: true })
     @IsInt()
@@ -52,17 +53,17 @@ export class JobOffer {
     @IsOptional()
     experienceRequiredInYears?: number;
 
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'float', nullable: true })
     @IsOptional()
     @IsString()
     @Min(0)
-    salaryMin?: string;
+    salaryMin?: number;
 
-    @Column({ type: 'varchar', nullable: true })
+    @Column({ type: 'float', nullable: true })
     @IsOptional()
     @IsString()
     @Min(0)
-    salaryMax?: string;
+    salaryMax?: number;
 
     @Column({
         type: 'varchar',
@@ -79,7 +80,7 @@ export class JobOffer {
     skills?: string[];
 
     // This value could be defined as an enum, but as we don't know all the possible values, we'll keep it as a string
-    @Column({ type: 'varchar' })
+    @Column({ type: 'varchar', default: 'unknown' })
     @IsString()
     type: string;
 

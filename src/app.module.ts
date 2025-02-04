@@ -5,7 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import * as Joi from 'joi';
 import { JobOffer } from './entities/job-offer.entity';
-
+import { JobOfferModule } from './modules/job-offer/job-offer.module';
 @Module({
     imports: [
         ConfigModule.forRoot({
@@ -14,7 +14,7 @@ import { JobOffer } from './entities/job-offer.entity';
                 DATABASE_URL: Joi.string().uri().required(),
                 EXTERNAL_API_URL_1: Joi.string().uri().required(),
                 EXTERNAL_API_URL_2: Joi.string().uri().required(),
-                CRON_SCHEDULE: Joi.string().required(),
+                CRON_JOB_OFFER_SCHEDULE: Joi.string().required(),
             }),
         }),
         TypeOrmModule.forRoot({
@@ -23,6 +23,7 @@ import { JobOffer } from './entities/job-offer.entity';
             entities: [JobOffer],
             synchronize: true,
         }),
+        JobOfferModule,
     ],
     controllers: [AppController],
     providers: [AppService],

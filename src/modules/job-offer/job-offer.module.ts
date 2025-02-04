@@ -12,4 +12,4 @@ import { JobOfferController } from './controllers/job-offer.controller';
     providers: [JobOfferService, JobOfferInternalService, JobOfferCronService],
     controllers: [JobOfferController],
 })
-export class JobOffersModule {}
+export class JobOfferModule {}

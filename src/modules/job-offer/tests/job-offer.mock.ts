@@ -48,8 +48,7 @@ export const _fetchResponse = [
         data: {
             metadata: {
                 requestId: 'req-s7liimwgg',
-                timestamp:
-                    '2025-02-04T11:13:17.122Z',
+                timestamp: '2025-02-04T11:13:17.122Z',
             },
             jobs: [
                 {
@@ -64,13 +63,8 @@ export const _fetchResponse = [
                         name: 'Creative Design Ltd',
                         industry: 'Design',
                     },
-                    skills: [
-                        'HTML',
-                        'CSS',
-                        'Vue.js',
-                    ],
-                    postedDate:
-                        '2025-01-27T07:41:30.279Z',
+                    skills: ['HTML', 'CSS', 'Vue.js'],
+                    postedDate: '2025-01-27T07:41:30.279Z',
                 },
                 {
                     jobId: 'P1-572',
@@ -84,16 +78,31 @@ export const _fetchResponse = [
                         name: 'BackEnd Solutions',
                         industry: 'Solutions',
                     },
-                    skills: [
-                        'HTML',
-                        'CSS',
-                        'Vue.js',
-                    ],
-                    postedDate:
-                        '2025-01-29T02:35:18.129Z',
+                    skills: ['HTML', 'CSS', 'Vue.js'],
+                    postedDate: '2025-01-29T02:35:18.129Z',
                 },
             ],
         },
     },
-    
-]
+];
+
+export const _jobOfferListItem = {
+    id: 282,
+    title: 'Backend Engineer',
+    company: 'DataWorks',
+    companyWebsite: null,
+    companyIndustry: 'Design',
+    location: 'New York, NY',
+    isRemote: null,
+    experienceRequiredInYears: null,
+    salaryMin: 89000,
+    salaryMax: 148000,
+    salaryCurrency: 'USD',
+    skills: ['python', 'machine learning', 'sql'],
+    type: 'contract',
+    externalId: 'P1-543',
+    provider: 'provider1',
+    postedAt: new Date('2025-01-30T15:23:47.331Z'),
+    createdAt: new Date('2025-02-04T22:05:13.512Z'),
+    updatedAt: new Date('2025-02-04T22:05:13.512Z'),
+};
